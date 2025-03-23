@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'dart:math' as math;
+import 'package:local_auth/local_auth.dart';
+import 'package:local_auth/error_codes.dart' as auth_error;
+import 'package:local_auth_android/local_auth_android.dart';
+import 'package:local_auth_darwin/local_auth_darwin.dart';
 import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
@@ -12,11 +17,106 @@ class OnboardingScreen extends StatefulWidget {
 class _OnboardingScreenState extends State<OnboardingScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
+  final LocalAuthentication _localAuth = LocalAuthentication();
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  Future<void> _authenticateWithBiometrics({bool isFace = false}) async {
+    try {
+      final bool canCheckBiometrics = await _localAuth.canCheckBiometrics;
+      final bool isDeviceSupported = await _localAuth.isDeviceSupported();
+      final canAuthenticate = canCheckBiometrics && isDeviceSupported;
+
+      if (!mounted) return;
+
+      if (!canAuthenticate) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Biometric authentication not available')),
+        );
+        return;
+      }
+
+      // For debugging
+      final availableBiometrics = await _localAuth.getAvailableBiometrics();
+      if (!mounted) return;
+
+      if (availableBiometrics.isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('No biometrics enrolled on this device')),
+        );
+        return;
+      }
+
+      // Debug output to help identify available biometrics
+      debugPrint("Available biometrics: $availableBiometrics");
+
+      // Don't check for specific biometric types, just proceed with authentication
+      // This handles devices that report generic BiometricType.weak or BiometricType.strong
+
+      final authenticated = await _localAuth.authenticate(
+        localizedReason: isFace ? 'Face authentication required' : 'Fingerprint authentication required',
+        options: const AuthenticationOptions(
+          biometricOnly: true,
+          useErrorDialogs: true,
+          stickyAuth: true,
+        ),
+        authMessages: const <AuthMessages>[
+          AndroidAuthMessages(
+            signInTitle: 'Biometric authentication required',
+            cancelButton: 'Cancel',
+          ),
+          IOSAuthMessages(
+            cancelButton: 'Cancel',
+          ),
+        ],
+      );
+
+      if (!mounted) return;
+
+      if (authenticated) {
+        // If this is the last biometric screen (face), navigate to verification success
+        if (isFace && _currentPage == 3) {
+          context.push('/verification-success');
+        } else {
+          // Otherwise, move to the next onboarding screen
+          _pageController.nextPage(
+            duration: const Duration(milliseconds: 300),
+            curve: Curves.easeInOut,
+          );
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Authentication cancelled or failed')),
+        );
+      }
+    } on PlatformException catch (e) {
+      if (!mounted) return;
+
+      String message = 'Authentication error: ${e.message}';
+
+      if (e.code == auth_error.notAvailable) {
+        message = 'Biometric hardware not available';
+      } else if (e.code == auth_error.notEnrolled) {
+        message = 'No biometrics enrolled';
+      } else if (e.code == auth_error.lockedOut || 
+                e.code == auth_error.permanentlyLockedOut) {
+        message = 'Biometric authentication locked';
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(message)),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Unexpected error: ${e.toString()}')),
+      );
+    }
   }
 
   Widget _buildProgressDots() {
@@ -42,43 +142,52 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildTopLines() {
     final screenWidth = MediaQuery.of(context).size.width;
-    final baseWidth = screenWidth - 48; // Total width minus padding
-    final spacing = 8.0;
+    final baseWidth = screenWidth - 48;
+    // Remove unused spacing variable
 
-    // Calculate proportional widths
-    final totalSpacing = spacing * 3; // 3 spaces between 4 lines
-    final availableWidth = baseWidth - totalSpacing;
+    // Calculate widths ensuring they're positive
+    final availableWidth = baseWidth > 0 ? baseWidth : 0.0;
 
-    final width1 = availableWidth * 0.7; // 70% of available width
-    final width2 = availableWidth * 0.2; // 20% of available width
-    final width3 = availableWidth * 0.1; // 10% of available width
+    // Adjust to make sure the total fits within availableWidth
+    final totalParts = 1.0; // 0.7 + 0.2 + 0.1 = 1.0
+    final width1 = math.max(0.0, availableWidth * 0.68);
+    final width2 = math.max(0.0, availableWidth * 0.18);
+    final width3 = math.max(0.0, availableWidth * 0.08);
 
+    // Use Expanded to prevent overflow
     return Row(
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Container(
-          height: 5,
-          width: width1,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(2),
+        Expanded(
+          flex: 68,
+          child: Container(
+            height: 5,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
         const SizedBox(width: 8),
-        Container(
-          height: 5,
-          width: width2,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(2),
+        Expanded(
+          flex: 18,
+          child: Container(
+            height: 5,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
         const SizedBox(width: 8),
-        Container(
-          height: 5,
-          width: width3,
-          decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            borderRadius: BorderRadius.circular(2),
+        Expanded(
+          flex: 8,
+          child: Container(
+            height: 5,
+            decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.primary,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
         ),
       ],
@@ -87,12 +196,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   Widget _buildWelcomeScreen() {
     final screenSize = MediaQuery.of(context).size;
-    final iconSize = screenSize.width * 0.25; // 25% of screen width
-    final buttonWidth = screenSize.width * 0.8; // 80% of screen width
+    final iconSize = screenSize.width * 0.25;
+    final buttonWidth = screenSize.width * 0.8;
 
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: screenSize.width * 0.06, // 6% of screen width
+        horizontal: screenSize.width * 0.06,
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -361,17 +470,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const Spacer(flex: 1),
           Center(
-            child: Container(
-              width: iconSize,
-              height: iconSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF6881FF).withOpacity(0.1),
-              ),
-              child: Icon(
-                Icons.fingerprint,
-                size: iconSize * 0.7,
-                color: const Color(0xFF6881FF),
+            child: GestureDetector(
+              onTap: () => _authenticateWithBiometrics(),
+              child: Container(
+                width: iconSize,
+                height: iconSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF6881FF).withOpacity(0.1),
+                ),
+                child: Icon(
+                  Icons.fingerprint,
+                  size: iconSize * 0.7,
+                  color: const Color(0xFF6881FF),
+                ),
               ),
             ),
           ),
@@ -426,17 +538,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           const Spacer(flex: 1),
           Center(
-            child: Container(
-              width: iconSize,
-              height: iconSize,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: const Color(0xFF6881FF).withOpacity(0.1),
-              ),
-              child: Icon(
-                Icons.face,
-                size: iconSize * 0.7,
-                color: const Color(0xFF6881FF),
+            child: GestureDetector(
+              onTap: () => _authenticateWithBiometrics(isFace: true),
+              child: Container(
+                width: iconSize,
+                height: iconSize,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: const Color(0xFF6881FF).withOpacity(0.1),
+                ),
+                child: Icon(
+                  Icons.face,
+                  size: iconSize * 0.7,
+                  color: const Color(0xFF6881FF),
+                ),
               ),
             ),
           ),
@@ -455,7 +570,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           SizedBox(height: screenSize.height * 0.04),
           Center(
             child: ElevatedButton(
-              onPressed: () => context.push('/verification-success'),
+              onPressed: () => _authenticateWithBiometrics(isFace: true),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6881FF),
                 minimumSize: Size(screenSize.width * 0.3, 48),
