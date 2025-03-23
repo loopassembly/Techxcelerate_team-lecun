@@ -158,7 +158,7 @@ async def request_aadhaar(data: RequestAadharData):
 
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "otp": otp},
+                         "data": {"request_id": request_id, "type": "Aadhaar", "expires_in": 10},
                          "status": "success"},
                 status_code=200,
             )
@@ -221,7 +221,7 @@ async def request_pan(data: RequestPanData):
             otp_collection.insert_one(otp_data)
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "otp": otp},
+                         "data": {"request_id": request_id, "type": "PAN", "expires_in": 10},
                          "status": "success"},
                 status_code=200,
             )
@@ -284,7 +284,7 @@ async def request_dl(data: RequestDrivingLicenseData):
             otp_collection.insert_one(otp_data)
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "otp": otp},
+                         "data": {"request_id": request_id, "type": "DL", "expires_in": 10},
                          "status": "success"},
                 status_code=200,
             )
