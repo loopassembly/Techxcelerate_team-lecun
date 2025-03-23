@@ -20,7 +20,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
     controller.start();
   }
 
-  Widget _buildProgressIndicator(BuildContext context) {
+  Widget _buildTopLines() {
     return Row(
       children: [
         Expanded(
@@ -69,7 +69,8 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
         child: Column(
           children: [
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.06),
+              padding:
+                  EdgeInsets.symmetric(horizontal: screenSize.width * 0.06),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -83,7 +84,7 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
                     ),
                   ),
                   SizedBox(height: screenSize.height * 0.015),
-                  _buildProgressIndicator(context),
+                  _buildTopLines(),
                   SizedBox(height: screenSize.height * 0.02),
                   Text(
                     'Position the QR code within the frame to scan',
@@ -146,12 +147,15 @@ class _QRScannerScreenState extends State<QRScannerScreen> {
           controller: controller,
           onDetect: (capture) {
             final List<Barcode> barcodes = capture.barcodes;
-            if (_isScanning && barcodes.isNotEmpty && barcodes.first.rawValue != null) {
+            if (_isScanning &&
+                barcodes.isNotEmpty &&
+                barcodes.first.rawValue != null) {
               _isScanning = false;
-              
+
               // For demo purposes, randomly decide success or failure
-              final bool isSuccess = DateTime.now().millisecondsSinceEpoch % 2 == 0;
-              
+              final bool isSuccess =
+                  DateTime.now().millisecondsSinceEpoch % 2 == 0;
+
               if (isSuccess) {
                 context.push('/success');
               } else {

@@ -20,7 +20,7 @@ class _LoginScreenState extends State<LoginScreen> {
     super.dispose();
   }
 
-  Widget _buildProgressIndicator() {
+  Widget _buildTopLines() {
     return Row(
       children: [
         Expanded(
@@ -39,7 +39,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             height: 5,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -50,7 +50,7 @@ class _LoginScreenState extends State<LoginScreen> {
           child: Container(
             height: 5,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -83,21 +83,13 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 SizedBox(height: screenSize.height * 0.015),
-                _buildProgressIndicator(),
+                _buildTopLines(),
                 SizedBox(height: screenSize.height * 0.06),
                 Center(
-                  child: Container(
-                    width: screenSize.width * 0.4,
-                    height: screenSize.width * 0.4,
-                    decoration: BoxDecoration(
-                      color: const Color(0xFF6881FF).withOpacity(0.1),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.verified_user,
-                      size: screenSize.width * 0.25,
-                      color: const Color(0xFF6881FF),
-                    ),
+                  child: Image.asset(
+                    'assets/images/shield_check.png',
+                    width: screenSize.width * 0.60,
+                    height: screenSize.width * 0.60,
                   ),
                 ),
                 SizedBox(height: screenSize.height * 0.06),

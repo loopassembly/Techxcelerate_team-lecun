@@ -4,7 +4,7 @@ import 'package:go_router/go_router.dart';
 class InstructionScreen extends StatelessWidget {
   const InstructionScreen({super.key});
 
-  Widget _buildProgressIndicator(BuildContext context) {
+  Widget _buildTopLines(BuildContext context) {
     return Row(
       children: [
         Expanded(
@@ -34,7 +34,7 @@ class InstructionScreen extends StatelessWidget {
           child: Container(
             height: 5,
             decoration: BoxDecoration(
-              color: Colors.grey.shade300,
+              color: Theme.of(context).colorScheme.primary,
               borderRadius: BorderRadius.circular(2),
             ),
           ),
@@ -65,7 +65,7 @@ class InstructionScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: screenSize.height * 0.015),
-              _buildProgressIndicator(context),
+              _buildTopLines(context),
               SizedBox(height: screenSize.height * 0.06),
               Center(
                 child: Container(
