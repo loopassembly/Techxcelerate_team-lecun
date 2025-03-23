@@ -9,6 +9,9 @@ import 'screens/onboarding_screen.dart';
 import 'screens/update_profile_screen.dart';
 import 'screens/verify_document_screen.dart';
 import 'screens/verification_success_screen.dart';
+import 'screens/identity_service_screen.dart';
+import 'screens/authentication_screen.dart';
+import 'screens/verification_qr_screen.dart';
 
 void main() {
   runApp(const ProviderScope(child: MyApp()));
@@ -44,6 +47,18 @@ final _router = GoRouter(
     GoRoute(
       path: '/verification-success',
       builder: (context, state) => const VerificationSuccessScreen(),
+    ),
+    GoRoute(
+      path: '/identity-service',
+      builder: (context, state) => const IdentityServiceScreen(),
+    ),
+    GoRoute(
+      path: '/authentication',
+      builder: (context, state) => const AuthenticationScreen(),
+    ),
+    GoRoute(
+      path: '/verification-qr',
+      builder: (context, state) => const VerificationQRScreen(),
     ),
   ],
 );

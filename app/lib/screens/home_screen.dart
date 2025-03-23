@@ -73,7 +73,7 @@ class HomeScreen extends StatelessWidget {
                     context,
                     'Get verified',
                     Icons.verified_user_outlined,
-                    onTap: () {},
+                    onTap: () => context.push('/identity-service'),
                   ),
                   _buildActionButton(
                     context,
