@@ -10,7 +10,7 @@ import jwt
 from jwt import PyJWTError
 import bcrypt
 from database import Database
-from schema import TokenData, RequestBirthCertificateData, RequestAadharData, RequestPanData, RequestDrivingLicenseData, SendDocData
+from schema import TokenData, RequestBirthCertificateData, RequestAadharData, RequestPanData, RequestDrivingLicenseData, SendDocData, URLRequest
 from config.phone import OTP
 from template.mail import MAIL_TEMPLATE
 from config.mail import MAIL_SERVER
@@ -105,7 +105,14 @@ def generate_access_token(data: Dict, expires_delta: Optional[timedelta] = None)
 
 
 
-
+def generate_expiring_url(id: str, name: str, expiry_minutes: int):
+    expiry_time = datetime.utcnow() + timedelta(minutes=expiry_minutes)
+    payload = {"id": id, "name": name, "exp": expiry_time}
+    
+    # Create JWT token
+    token = jwt.encode(payload, os.getenv("JWT_SECRET"), algorithm="HS256")
+    
+    return f"https://bursting-shepherd-promoted.ngrok-free.app/api/validate/verification?token={token}"
 
         
 @app.post("/api/request/aadhaar")
@@ -115,7 +122,7 @@ async def request_aadhaar(data: RequestAadharData):
         get_collection = db.get_collection("data")
         
         # Find Aadhaar Data
-        get_aadhaar_data = get_collection.find_one({"aadhar.uid": str(data.aadhar_number)})
+        get_aadhaar_data = get_collection.find_one({"aadhar.uid": str(data.aadhaar_number)})
         
         if not get_aadhaar_data:
             return JSONResponse(
@@ -149,7 +156,7 @@ async def request_aadhaar(data: RequestAadharData):
                 "request_id": request_id,
                 "otp": hashed_otp,  # Fix: Convert hashed bytes to string
                 "doc_type": "Aadhaar",
-                "doc_number": data.aadhar_number,
+                "doc_number": data.aadhaar_number,
                 "created_at": datetime.now(),
                 "valid_till": datetime.now() + timedelta(minutes=10)
             }
@@ -157,7 +164,7 @@ async def request_aadhaar(data: RequestAadharData):
 
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "type": "Aadhaar", "expires_in": 10},
+                         "data": {"request_id": request_id, "type": "Aadhaar", "expires_in_minutes": 10},
                          "status": "success"},
                 status_code=200,
             )
@@ -220,7 +227,7 @@ async def request_pan(data: RequestPanData):
             otp_collection.insert_one(otp_data)
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "type": "PAN", "expires_in": 10},
+                         "data": {"request_id": request_id, "type": "PAN", "expires_in_minutes": 10},
                          "status": "success"},
                 status_code=200,
             )
@@ -283,7 +290,7 @@ async def request_dl(data: RequestDrivingLicenseData):
             otp_collection.insert_one(otp_data)
             return JSONResponse(
                 content={"message": "OTP Sent Successfully",
-                         "data": {"request_id": request_id, "type": "DL", "expires_in": 10},
+                         "data": {"request_id": request_id, "type": "DL", "expires_in_minutes": 10},
                          "status": "success"},
                 status_code=200,
             )
@@ -323,6 +330,7 @@ async def send_doc(data: SendDocData):
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_aadhaar_data["aadhar"],
+                             "protoId": get_aadhaar_data["_id"],
                              "status": "success"},
                     status_code=200,
                 )
@@ -332,6 +340,7 @@ async def send_doc(data: SendDocData):
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_pan_data["pan"],
+                             "protoId": get_pan_data["_id"],
                              "status": "success"},
                     status_code=200,
                 )
@@ -341,6 +350,7 @@ async def send_doc(data: SendDocData):
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_dl_data["driving_license"],
+                             "protoId": get_dl_data["_id"],
                              "status": "success"},
                     status_code=200,
                 )
@@ -357,3 +367,46 @@ async def send_doc(data: SendDocData):
         return JSONResponse(
             content={"message": f"{str(e)}", "status": "error"}, status_code=500
         )
+        
+        
+@app.post("/api/request/verification")
+async def create_url(request: URLRequest):
+    try :
+        expiring_url = generate_expiring_url(request.id, request.name, 5)
+        return JSONResponse(
+            content={"message": "Verification code sent successfully", "data": {"url": expiring_url}, "status": "success"},
+            status_code=200,
+        )
+    except Exception as e:
+        return JSONResponse(
+            content={"message": f"{str(e)}", "status": "error"}, status_code=500
+        )
+        
+
+@app.get("/api/validate/verification")
+async def access_protected_url(token: str):
+    try:
+        # Decode and verify token
+        payload = jwt.decode(token, os.getenv("JWT_SECRET"), algorithms=["HS256"])
+        get_user_data = db.get_collection("data").find_one({"_id": ObjectId(payload["id"])})
+        if not get_user_data:
+            return JSONResponse(
+                content={"message": "User not found", "status": "error"},
+                status_code=404,
+                )
+        if payload["name"] == "bank":
+            return JSONResponse(
+                content={"message": "User data fetched successfully", "data": { "aadhaar": get_user_data["aadhar"], "pan" : get_user_data["pan"]}, "status": "success"},
+                status_code=200,
+            )
+        elif payload["name"] == "traffic":
+            return JSONResponse(
+                content={"message": "User data fetched successfully", "data": { "dl" : get_user_data["driving_license"]}, "status": "success"},
+                status_code=200,
+            )
+    
+    except jwt.ExpiredSignatureError:
+        raise HTTPException(status_code=401, detail="URL has expired")
+    
+    except jwt.InvalidTokenError:
+        raise HTTPException(status_code=400, detail="Invalid token")
