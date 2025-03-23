@@ -2,7 +2,7 @@
   <img src="https://raw.githubusercontent.com/loopassembly/Techxcelerate_team-lecun/refs/heads/main/demo-images/protoID%20logo.png" alt="ProtoID Logo" width="150">
 </p>
 
-# ProtoID -- Your Identity, Your Control
+# ProtoID - Your Identity, Your Control
 
 <p>
   <img src="https://raw.githubusercontent.com/loopassembly/Techxcelerate_team-lecun/refs/heads/main/demo-images/PID%20Home.png" alt="ProtoID " width="300">
@@ -37,10 +37,32 @@ A job applicant’s degree certificate is questioned by an employer. Instead of 
 A refugee without traditional identity documents struggles to access essential services. ProtoID allows secure verification using verifiable credentials linked to their past records, enabling them to rebuild their life.
 
 ## Tech - Stack
-**Languages:** Golang, Python, Dart, TypeScript, JavaScript, Solidity
-**Frontend:** Flutter
-**Backend:** Go Fiber, FastAPI, Ether.js, Hardhat
-**Database:** Web3.storage, PostgreSQL
-**AI/ML:** OpenCV, NumPy, SciPy, face_recognition, Scikit-learn
- **Models / APIs:** Sonar Pro, Saarika:v2, Mitra AI, Qwen: QwQ, ArcFace (InsightFace), MTCNN
-**Frameworks:** Flutter, PyTorch
+**Languages:**  Golang, Python, Dart, TypeScript, JavaScript, Solidity  
+
+**Frontend:**  Flutter  
+
+**Backend:**  Go Fiber, FastAPI, Ether.js, Hardhat  
+
+**Database:**  Web3.storage, PostgreSQL  
+
+**AI/ML:**  OpenCV, NumPy, SciPy, face_recognition, Scikit-learn  
+
+**Models / APIs:**  Sonar Pro, Saarika:v2, Mitra AI, Qwen: QwQ, ArcFace (InsightFace), MTCNN  
+
+**Frameworks:**  Flutter, PyTorch  
+
+---
+## <u>Team Name</u> : Lecun
+**Problem Statement 6 : Web3-powered Secure Digital Identity System**
+
+**Use Case:** Develop a decentralized digital ID system that users control and share access to when required for KYC, voting, etc.
+
+### Team Details:
+1. Nihal Sivapuram
+2. Kshitij Mishra
+3. Vaibhav Raj
+4. Shreyansh Gupta
+5. Ashutosh Anand
+6. Aditya Coomar
+7. Amogh Agrawal
+
