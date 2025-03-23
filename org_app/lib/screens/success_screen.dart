@@ -92,20 +92,20 @@ class SuccessScreen extends StatelessWidget {
                     _buildDetailRow(
                       context, 
                       'ID', 
-                      'PROTO-1234-5678',
+                      '9724XXXX5678', 
+                      screenSize
+                    ),
+                    SizedBox(height: screenSize.height * 0.01),
+                    _buildDetailRow(
+                      context,
+                      'Name',
+                      'Shreyansh Gupta',
                       screenSize,
                     ),
                     SizedBox(height: screenSize.height * 0.01),
                     _buildDetailRow(
-                      context, 
-                      'Name', 
-                      'John Doe',
-                      screenSize,
-                    ),
-                    SizedBox(height: screenSize.height * 0.01),
-                    _buildDetailRow(
-                      context, 
-                      'Verification Status', 
+                      context,
+                      'Verification Status',
                       'Verified',
                       screenSize,
                       valueColor: Colors.green,
@@ -169,12 +169,12 @@ class SuccessScreen extends StatelessWidget {
   }
 
   Widget _buildDetailRow(
-    BuildContext context, 
-    String label, 
-    String value, 
-    Size screenSize,
-    {Color? valueColor}
-  ) {
+    BuildContext context,
+    String label,
+    String value,
+    Size screenSize, {
+    Color? valueColor,
+  }) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
