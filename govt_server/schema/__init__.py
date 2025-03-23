@@ -6,5 +6,22 @@ class TokenData(BaseModel):
     username: str = None
 
 
-class SendMail(BaseModel):
-    email: EmailStr = Field(..., example="example@example.com")
+class RequestBirthCertificateData(BaseModel):
+    applicationNumber: str = Field(...)
+    name: str = Field(..., min_length=3, max_length=50)
+    dob: str = Field(..., min_length=10, max_length=10)
+    
+
+class RequestAadharData(BaseModel):
+    aadhar_number: str = Field(..., min_length=12, max_length=12)
+
+class SendDocData(BaseModel):
+    requestId: str = Field(...)
+    otp: str = Field(..., min_length=6, max_length=6)
+
+class RequestPanData(BaseModel):
+    pan_number: str = Field(..., min_length=10, max_length=10)
+    
+class RequestDrivingLicenseData(BaseModel):
+    dl_number: str = Field(..., min_length=15, max_length=15)
+    
