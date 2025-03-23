@@ -29,93 +29,199 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           height: 8,
           decoration: BoxDecoration(
             shape: BoxShape.circle,
-            color: _currentPage == index
-                ? const Color(0xFF6881FF)
-                : const Color(0xFF6881FF).withOpacity(0.3),
+            color:
+                _currentPage == index
+                    ? const Color(0xFF6881FF)
+                    : const Color(0xFF6881FF).withOpacity(0.3),
           ),
         ),
       ),
     );
   }
 
-  Widget _buildWelcomeScreen() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+  Widget _buildTopLines() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final baseWidth = screenWidth - 48; // Total width minus padding
+    final spacing = 8.0;
+
+    // Calculate proportional widths
+    final totalSpacing = spacing * 3; // 3 spaces between 4 lines
+    final availableWidth = baseWidth - totalSpacing;
+
+    final width1 = availableWidth * 0.7; // 70% of available width
+    final width2 = availableWidth * 0.2; // 20% of available width
+    final width3 = availableWidth * 0.1; // 10% of available width
+
+    return Row(
       children: [
-        Icon(
-          Icons.verified_user,
-          size: 100,
-          color: const Color(0xFF6881FF),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'ProtoID',
-          style: TextStyle(
-            fontSize: 32,
-            fontWeight: FontWeight.bold,
+        Container(
+          height: 5,
+          width: width1,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(height: 8),
-        const Text(
-          'Secure Digital Identity',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black54,
+        const SizedBox(width: 8),
+        Container(
+          height: 5,
+          width: width2,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
-        const SizedBox(height: 48),
-        ElevatedButton(
-          onPressed: () {
-            _pageController.nextPage(
-              duration: const Duration(milliseconds: 300),
-              curve: Curves.easeInOut,
-            );
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: const Color(0xFF6881FF),
-            padding: const EdgeInsets.symmetric(horizontal: 48, vertical: 16),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(30),
-            ),
+        const SizedBox(width: 8),
+        Container(
+          height: 5,
+          width: width3,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.primary,
+            borderRadius: BorderRadius.circular(2),
           ),
-          child: const Text(
-            'Get Started',
-            style: TextStyle(fontSize: 18),
-          ),
-        ),
-        const SizedBox(height: 24),
-        const Text(
-          'Powered by Blockchain',
-          style: TextStyle(color: Colors.black54),
-        ),
-        const Text(
-          'Zero-Knowledge Proofs',
-          style: TextStyle(color: Colors.black54),
         ),
       ],
     );
   }
 
-  Widget _buildAadhaarScreen() {
+  Widget _buildWelcomeScreen() {
+    final screenSize = MediaQuery.of(context).size;
+    final iconSize = screenSize.width * 0.25; // 25% of screen width
+    final buttonWidth = screenSize.width * 0.8; // 80% of screen width
+
     return Padding(
-      padding: const EdgeInsets.all(24.0),
+      padding: EdgeInsets.symmetric(
+        horizontal: screenSize.width * 0.06, // 6% of screen width
+      ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Text(
+          Center(
+            child: Image.asset(
+              'assets/images/shield_check.png',
+              width: iconSize,
+              height: iconSize,
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.04),
+          Text(
+            'ProtoID',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.07,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1A1A1A),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.01),
+          Text(
+            'Secure Digital Identity',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.04,
+              color: const Color(0xFF666666),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.06),
+          SizedBox(
+            width: buttonWidth,
+            height: 56,
+            child: ElevatedButton(
+              onPressed: () {
+                _pageController.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6881FF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(28),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Get Started',
+                style: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.04),
+          Text(
+            'Powered by Blockchain',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.035,
+              color: const Color(0xFF666666),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.005),
+          Text(
+            'Zero-Knowledge Proofs',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.035,
+              color: const Color(0xFF666666),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAadhaarScreen() {
+    final screenSize = MediaQuery.of(context).size;
+    final horizontalPadding = screenSize.width * 0.06;
+    final inputHeight = 56.0;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenSize.height * 0.04),
+          Text(
             'Authentication',
             style: TextStyle(
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
+              fontSize: screenSize.width * 0.055,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1A1A1A),
             ),
-            textAlign: TextAlign.center,
           ),
-          const SizedBox(height: 48),
+          SizedBox(height: screenSize.height * 0.015),
+          _buildTopLines(),
+          SizedBox(height: screenSize.height * 0.06),
+          Text(
+            'Aadhaar card number',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.04,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF1A1A1A),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.015),
           TextFormField(
             decoration: InputDecoration(
               hintText: '1241 6534 2452',
+              hintStyle: TextStyle(
+                color: const Color(0xFF999999),
+                fontSize: screenSize.width * 0.04,
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF6881FF)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
             ),
             keyboardType: TextInputType.number,
@@ -124,24 +230,61 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               _AadhaarFormatter(),
             ],
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6881FF),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+          SizedBox(height: screenSize.height * 0.04),
+          SizedBox(
+            width: double.infinity,
+            height: inputHeight,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6881FF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Get OTP',
+                style: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: const Text('Get OTP'),
           ),
-          const SizedBox(height: 24),
+          const Spacer(),
+          Text(
+            'OTP',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.04,
+              fontWeight: FontWeight.w500,
+              color: const Color(0xFF1A1A1A),
+            ),
+          ),
+          SizedBox(height: screenSize.height * 0.015),
           TextFormField(
             decoration: InputDecoration(
               hintText: '451342',
+              hintStyle: TextStyle(
+                color: const Color(0xFF999999),
+                fontSize: screenSize.width * 0.04,
+              ),
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(15),
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFFE5E5E5)),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(12),
+                borderSide: const BorderSide(color: Color(0xFF6881FF)),
+              ),
+              contentPadding: const EdgeInsets.symmetric(
+                horizontal: 16,
+                vertical: 16,
               ),
             ),
             keyboardType: TextInputType.number,
@@ -150,105 +293,195 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               LengthLimitingTextInputFormatter(6),
             ],
           ),
-          const SizedBox(height: 24),
-          ElevatedButton(
-            onPressed: () {
-              _pageController.nextPage(
-                duration: const Duration(milliseconds: 300),
-                curve: Curves.easeInOut,
-              );
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFF6881FF),
-              padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
+          SizedBox(height: screenSize.height * 0.04),
+          SizedBox(
+            width: double.infinity,
+            height: inputHeight,
+            child: ElevatedButton(
+              onPressed: () {
+                _pageController.nextPage(
+                  duration: const Duration(milliseconds: 300),
+                  curve: Curves.easeInOut,
+                );
+              },
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6881FF),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                'Submit',
+                style: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  fontWeight: FontWeight.w600,
+                  color: Colors.white,
+                ),
               ),
             ),
-            child: const Text('Submit'),
           ),
+          const Spacer(),
         ],
       ),
     );
   }
 
   Widget _buildFingerprintScreen() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Authentication',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    final screenSize = MediaQuery.of(context).size;
+    final iconSize = screenSize.width * 0.45;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.06),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenSize.height * 0.04),
+          Text(
+            'Authentication',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.055,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1A1A1A),
+            ),
           ),
-        ),
-        const SizedBox(height: 48),
-        Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFF6881FF).withOpacity(0.1),
+          SizedBox(height: screenSize.height * 0.015),
+          _buildTopLines(),
+          SizedBox(height: screenSize.height * 0.06),
+          Center(
+            child: Text(
+              'Fingerprint Authentication',
+              style: TextStyle(
+                fontSize: screenSize.width * 0.045,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1A1A1A),
+              ),
+            ),
           ),
-          child: Icon(
-            Icons.fingerprint,
-            size: 80,
-            color: const Color(0xFF6881FF),
+          const Spacer(flex: 1),
+          Center(
+            child: Container(
+              width: iconSize,
+              height: iconSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF6881FF).withOpacity(0.1),
+              ),
+              child: Icon(
+                Icons.fingerprint,
+                size: iconSize * 0.7,
+                color: const Color(0xFF6881FF),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 32),
-        const Text(
-          'Place your finger on\nthe fingerprint scanner',
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black54,
+          SizedBox(height: screenSize.height * 0.04),
+          Center(
+            child: Text(
+              'Place your finger on\nthe fingerprint scanner',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: screenSize.width * 0.04,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1A1A1A),
+              ),
+            ),
           ),
-        ),
-      ],
+          const Spacer(flex: 2),
+        ],
+      ),
     );
   }
 
   Widget _buildFaceScreen() {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Text(
-          'Authentication',
-          style: TextStyle(
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
+    final screenSize = MediaQuery.of(context).size;
+    final iconSize = screenSize.width * 0.45;
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.06),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(height: screenSize.height * 0.04),
+          Text(
+            'Authentication',
+            style: TextStyle(
+              fontSize: screenSize.width * 0.055,
+              fontWeight: FontWeight.w600,
+              color: const Color(0xFF1A1A1A),
+            ),
           ),
-        ),
-        const SizedBox(height: 48),
-        Container(
-          width: 150,
-          height: 150,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: const Color(0xFF6881FF).withOpacity(0.1),
+          SizedBox(height: screenSize.height * 0.015),
+          _buildTopLines(),
+          SizedBox(height: screenSize.height * 0.06),
+          Center(
+            child: Text(
+              'Face Authentication',
+              style: TextStyle(
+                fontSize: screenSize.width * 0.045,
+                fontWeight: FontWeight.w600,
+                color: const Color(0xFF1A1A1A),
+              ),
+            ),
           ),
-          child: Icon(
-            Icons.face,
-            size: 80,
-            color: const Color(0xFF6881FF),
+          const Spacer(flex: 1),
+          Center(
+            child: Container(
+              width: iconSize,
+              height: iconSize,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: const Color(0xFF6881FF).withOpacity(0.1),
+              ),
+              child: Icon(
+                Icons.face,
+                size: iconSize * 0.7,
+                color: const Color(0xFF6881FF),
+              ),
+            ),
           ),
-        ),
-        const SizedBox(height: 32),
-        const Text(
-          'Scan Your Face',
-          style: TextStyle(
-            fontSize: 16,
-            color: Colors.black54,
+          SizedBox(height: screenSize.height * 0.04),
+          Center(
+            child: Text(
+              'Click To Scan\nYour Face',
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                fontSize: screenSize.width * 0.04,
+                fontWeight: FontWeight.w500,
+                color: const Color(0xFF1A1A1A),
+              ),
+            ),
           ),
-        ),
-      ],
+          SizedBox(height: screenSize.height * 0.04),
+          Center(
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF6881FF),
+                minimumSize: Size(screenSize.width * 0.3, 48),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'Scan',
+                style: TextStyle(
+                  fontSize: screenSize.width * 0.04,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.white,
+                ),
+              ),
+            ),
+          ),
+          const Spacer(flex: 2),
+        ],
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -263,7 +496,20 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   });
                 },
                 children: [
-                  _buildWelcomeScreen(),
+                  Column(
+                    children: [
+                      SizedBox(height: screenSize.height * 0.02),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                        child: _buildTopLines(),
+                      ),
+                      SizedBox(height: screenSize.height * 0.02),
+                      SizedBox(
+                        height: screenSize.height * 0.7,
+                        child: _buildWelcomeScreen(),
+                      ),
+                    ],
+                  ),
                   _buildAadhaarScreen(),
                   _buildFingerprintScreen(),
                   _buildFaceScreen(),
@@ -271,7 +517,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 48.0),
+              padding: EdgeInsets.only(bottom: screenSize.height * 0.04),
               child: _buildProgressDots(),
             ),
           ],
@@ -290,7 +536,7 @@ class _AadhaarFormatter extends TextInputFormatter {
     if (newValue.text.length > 12) {
       return oldValue;
     }
-    
+
     final StringBuffer newText = StringBuffer();
     for (int i = 0; i < newValue.text.length; i++) {
       if (i > 0 && i % 4 == 0) {
@@ -298,7 +544,7 @@ class _AadhaarFormatter extends TextInputFormatter {
       }
       newText.write(newValue.text[i]);
     }
-    
+
     return TextEditingValue(
       text: newText.toString(),
       selection: TextSelection.collapsed(offset: newText.length),
