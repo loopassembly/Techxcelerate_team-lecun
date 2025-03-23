@@ -124,7 +124,6 @@ async def request_aadhaar(data: RequestAadharData):
             )
 
         phone_number = get_aadhaar_data.get("aadhar", {}).get("mobile_number")
-        print("test4")
         
         if not phone_number:
             return JSONResponse(
@@ -320,6 +319,7 @@ async def send_doc(data: SendDocData):
             doc_type = get_otp_data["doc_type"]
             if doc_type == "Aadhaar" :
                 get_aadhaar_data = get_collection.find_one({"aadhar.uid": get_otp_data["doc_number"]})
+                otp_collection.update_one({"request_id": data.requestId}, {"$set": {"valid_till": datetime.now()}})
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_aadhaar_data["aadhar"],
@@ -328,6 +328,7 @@ async def send_doc(data: SendDocData):
                 )
             elif doc_type == "PAN" :
                 get_pan_data = get_collection.find_one({"pan.number": get_otp_data["doc_number"]})
+                otp_collection.update_one({"request_id": data.requestId}, {"$set": {"valid_till": datetime.now()}})
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_pan_data["pan"],
@@ -336,6 +337,7 @@ async def send_doc(data: SendDocData):
                 )
             elif doc_type == "DL" :
                 get_dl_data = get_collection.find_one({"driving_license.number": get_otp_data["doc_number"]})
+                otp_collection.update_one({"request_id": data.requestId}, {"$set": {"valid_till": datetime.now()}})
                 return JSONResponse(
                     content={"message": "Document Sent Successfully",
                              "data": get_dl_data["driving_license"],
