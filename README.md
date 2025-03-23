@@ -8,6 +8,11 @@
   <img src="https://raw.githubusercontent.com/loopassembly/Techxcelerate_team-lecun/refs/heads/main/demo-images/PID%20Home.png" alt="ProtoID " width="300">
 </p>
 
+Drive(demo) : https://drive.google.com/drive/folders/1Zt6mSVzEx6-OXii-yCnVq9Tuv3Iv5PGA?usp=drive_link
+
+Figma : https://www.figma.com/design/hO5iCuph1BJrxaOXcwkYeq/BitsHack%2FUI?node-id=25-22&t=YDMyGnEaQJ7nRWj6-1
+
+
 A one stop digital and physical identity verification platform built on web3. It enables users to verify their eligibility or identity while sharing minimal to no personal information with verifying organizations.
 
  - Provides users with a single identity solution that could be used **across all platforms** from logging into websites to completing KYCs for banks.
@@ -19,22 +24,23 @@ A one stop digital and physical identity verification platform built on web3. It
 ## Why ProtoID?
 From creating an online account for a website to creating a bank account physically, proving your identity always involved sharing personal information. But not anymore! ProtoID lets you verify your identity on your terms. Share only what's needed and nothing more. 
 
-## Use-Cases
+## Use Cases  
 
-**1. Hassle-Free Banking & KYC**
-A freelancer from another country struggles to open a bank account due to excessive documentation requirements. ProtoID enables instant, secure verification without revealing unnecessary personal details.
+### 1. Hassle-Free Banking & KYC  
+Imagine being a freelancer from another country, trying to open a bank account, only to be stuck in a maze of paperwork and endless verification steps. With ProtoID, you can instantly verify your identity securely—without oversharing personal details.  
 
-**2. Preventing Online Fraud & Identity Theft**
-A user’s identity is stolen and used for fraudulent loans. With ProtoID’s decentralized verification, only the real owner can authenticate transactions, preventing impersonation and fraud.
+### 2. Stopping Online Fraud & Identity Theft  
+Picture this: someone steals your identity and takes out fraudulent loans in your name. ProtoID’s decentralized verification ensures only *you* can authenticate transactions, keeping impersonators and fraudsters out.  
 
-**3. Secure & Anonymous Voting**
-In a national election, citizens want to vote online but fear data breaches and manipulation. ProtoID ensures voter authentication while maintaining privacy and preventing election fraud.
+### 3. Secure & Anonymous Online Voting  
+Online voting could make elections more accessible, but concerns about data breaches and manipulation hold people back. ProtoID guarantees voter authentication while protecting privacy, ensuring a fair and tamper-proof election process.  
 
-**4. Academic Credential Verification**
-A job applicant’s degree certificate is questioned by an employer. Instead of slow, manual verification, ProtoID provides instant, tamper-proof proof of credentials on the blockchain.
+### 4. Instant Academic Credential Verification  
+A job applicant submits their degree certificate, but the employer questions its authenticity. Instead of going through slow, manual verification, ProtoID provides an instant, tamper-proof record of their credentials on the blockchain.  
 
- **5. Cross-Border Identity Verification**
-A refugee without traditional identity documents struggles to access essential services. ProtoID allows secure verification using verifiable credentials linked to their past records, enabling them to rebuild their life.
+### 5. Cross-Border Identity Verification  
+For refugees and displaced individuals without traditional identity documents, accessing basic services can be a challenge. ProtoID enables secure verification using verifiable credentials linked to past records—helping them rebuild their lives with dignity.  
+
 
 ## Tech - Stack
 **Languages:**  Golang, Python, Dart, TypeScript, JavaScript, Solidity  
