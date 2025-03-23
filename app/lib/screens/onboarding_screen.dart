@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:go_router/go_router.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({super.key});
@@ -454,7 +455,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           SizedBox(height: screenSize.height * 0.04),
           Center(
             child: ElevatedButton(
-              onPressed: () {},
+              onPressed: () => context.push('/verification-success'),
               style: ElevatedButton.styleFrom(
                 backgroundColor: const Color(0xFF6881FF),
                 minimumSize: Size(screenSize.width * 0.3, 48),

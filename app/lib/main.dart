@@ -1,74 +1,68 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import 'screens/fetched_data_screen.dart';
+import 'screens/home_screen.dart';
 import 'screens/onboarding_screen.dart';
+import 'screens/update_profile_screen.dart';
+import 'screens/verify_document_screen.dart';
+import 'screens/verification_success_screen.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
+
+final _router = GoRouter(
+  initialLocation: '/onboarding',
+  routes: [
+    GoRoute(
+      path: '/',
+      redirect: (_, __) => '/onboarding',
+    ),
+    GoRoute(
+      path: '/onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
+    GoRoute(
+      path: '/home',
+      builder: (context, state) => const HomeScreen(),
+    ),
+    GoRoute(
+      path: '/update-profile',
+      builder: (context, state) => const UpdateProfileScreen(),
+    ),
+    GoRoute(
+      path: '/verify-document',
+      builder: (context, state) => const VerifyDocumentScreen(),
+    ),
+    GoRoute(
+      path: '/fetched-data',
+      builder: (context, state) => const FetchedDataScreen(),
+    ),
+    GoRoute(
+      path: '/verification-success',
+      builder: (context, state) => const VerificationSuccessScreen(),
+    ),
+  ],
+);
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       title: 'ProtoID',
-      debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF6881FF)),
-        textTheme: TextTheme(
-          displayLarge: GoogleFonts.notoSerif(
-            fontSize: 32.0,
-            fontWeight: FontWeight.w700,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          displayMedium: GoogleFonts.notoSerif(
-            fontSize: 28.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          displaySmall: GoogleFonts.notoSerif(
-            fontSize: 24.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          headlineMedium: GoogleFonts.notoSerif(
-            fontSize: 20.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          headlineSmall: GoogleFonts.notoSerif(
-            fontSize: 18.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          titleLarge: GoogleFonts.notoSerif(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w600,
-            color: Colors.black87,
-            height: 1.2,
-          ),
-          bodyLarge: GoogleFonts.notoSerif(
-            fontSize: 16.0,
-            fontWeight: FontWeight.w400,
-            color: Colors.black87,
-            height: 1.5,
-          ),
-          bodyMedium: GoogleFonts.notoSerif(
-            fontSize: 14.0,
-            fontWeight: FontWeight.w400,
-            color: Colors.black87,
-            height: 1.5,
-          ),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF6881FF),
         ),
+        textTheme: GoogleFonts.robotoCondensedTextTheme(),
         useMaterial3: true,
       ),
-      home: const OnboardingScreen(),
+      routerConfig: _router,
     );
   }
 }
