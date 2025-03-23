@@ -38,10 +38,10 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: screenSize.height * 0.05),
               _buildWelcomeMessage(context, screenSize, "Shreyansh"),
               SizedBox(height: screenSize.height * 0.025),
-              _buildProtoIdBox(context, screenSize, "972412345678"),
+              _buildProtoIdBox(context, screenSize, "Your ProtoID :", "972412345678"),
               SizedBox(height: screenSize.height * 0.025),
               _buildProtoIdBox(
-                  context, screenSize, "1234abcd-5678-efgh-9101-ijklmnopqrst"),
+                  context, screenSize, "Your DID :", "did:key:z6MkmyLGDkKW4oj7eXueSXCxkQe3uvB4yBxzvi1rWkZaqtW"),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -129,7 +129,7 @@ class HomeScreen extends StatelessWidget {
   }
 
   Widget _buildProtoIdBox(
-      BuildContext context, Size screenSize, String protoId) {
+      BuildContext context, Size screenSize, String title ,String protoId) {
     return Container(
       width: double.infinity,
       padding: EdgeInsets.symmetric(
@@ -153,7 +153,7 @@ class HomeScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Your ProtoID :',
+                title,
                 style: TextStyle(
                   fontSize: screenSize.width * 0.035,
                   fontWeight: FontWeight.w400,
@@ -161,12 +161,20 @@ class HomeScreen extends StatelessWidget {
                 ),
               ),
               SizedBox(height: screenSize.height * 0.005),
-              Text(
-                protoId,
-                style: TextStyle(
-                  fontSize: screenSize.width * 0.045,
-                  fontWeight: FontWeight.w600,
-                  color: Colors.white,
+              Container(
+                constraints: BoxConstraints(
+                  maxWidth: screenSize.width * 0.6,
+                ),
+                child: Text(
+                  protoId,
+                  style: TextStyle(
+                    fontSize: screenSize.width * 0.045,
+                    fontWeight: FontWeight.w600,
+                    color: Colors.white,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                 ),
               ),
             ],
