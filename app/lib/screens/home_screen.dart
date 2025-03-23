@@ -38,7 +38,10 @@ class HomeScreen extends StatelessWidget {
               SizedBox(height: screenSize.height * 0.05),
               _buildWelcomeMessage(context, screenSize, "Shreyansh"),
               SizedBox(height: screenSize.height * 0.025),
-              _buildProtoIdBox(context, screenSize, "abcd-abcd"),
+              _buildProtoIdBox(context, screenSize, "972412345678"),
+              SizedBox(height: screenSize.height * 0.025),
+              _buildProtoIdBox(
+                  context, screenSize, "1234abcd-5678-efgh-9101-ijklmnopqrst"),
               const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
