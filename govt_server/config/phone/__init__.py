@@ -1,7 +1,11 @@
 import httpx
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 class OTP:
-    otp_api_auth_key = "7EkwaqG3tXCYfrRFJpDVyBTUAui8v1Pm9d5NKl0LczhQOMnWbjkh9PyGazwr0VSe7Z8jq3xLJcufNMbO"
+    otp_api_auth_key = os.getenv("SMS_API_KEY")
     
     def __init__(self):
         self.url = "https://www.fast2sms.com/dev/bulkV2"
